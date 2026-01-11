@@ -16,7 +16,6 @@
             padding: 2px 0;
             font-size: 0.8rem;
         }
-        /* Custom scrollbar for logs */
         .log-box::-webkit-scrollbar { width: 8px; }
         .log-box::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
         .log-box::-webkit-scrollbar-track { background: #1f2937; }
@@ -31,489 +30,466 @@
 </head>
 <body class="min-h-screen p-4 sm:p-8 text-gray-100">
 
-    <div class="max-w-7xl mx-auto">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-teal-400">MAG MAC Marauder 🏴‍☠️</h1>
-            <p class="text-gray-400 mt-2">High-speed MAC Address Scanner & Proxy for MAG/Infomir Portals.</p>
-        </header>
+<div class="max-w-7xl mx-auto">
+    <header class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-teal-400">MAG MAC Marauder 🏴‍☠️</h1>
+        <p class="text-gray-400 mt-2">High-speed MAC Address Scanner & Proxy for MAG/Infomir Portals.</p>
+    </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <div class="lg:col-span-1 space-y-6">
+        <div class="lg:col-span-1 space-y-6">
 
-                <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
-                    <h2 class="text-xl font-semibold mb-3 text-teal-300">Target Portal</h2>
-                    <div class="flex flex-col space-y-4">
-                        <input type="url" id="portalUrl" placeholder="Enter Portal URL (e.g., http://example.com/c)"
-                               class="bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:ring-teal-500 focus:border-teal-500">
+            <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-semibold mb-3 text-teal-300">Target Portal</h2>
+                <div class="flex flex-col space-y-4">
+                    <input type="url" id="portalUrl" placeholder="Enter Portal URL (e.g., http://example.com/c)"
+                           class="bg-gray-700 text-white p-3 rounded-lg border border-gray-600 focus:ring-teal-500 focus:border-teal-500">
 
-                        <div class="flex space-x-2">
-                            <button id="startScanBtn" onclick="startScan()"
-                                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md shadow-green-900/50">
-                                <span id="startScanText">Start Scan</span>
-                            </button>
-                            <button id="stopScanBtn" onclick="stopScan()" disabled
-                                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition duration-200 opacity-50 cursor-not-allowed shadow-md shadow-red-900/50">
-                                Stop Scan
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
-                    <h2 class="text-xl font-semibold mb-3 text-teal-300">URL Hunter (via urlscan.io)</h2>
-                    <p class="text-gray-400 text-sm mb-4">Finds potential working portals for scanning.</p>
-                    <button id="fetchUrlsBtn" onclick="fetchUrls()"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md shadow-blue-900/50">
-                        Fetch & Verify Portals
-                    </button>
-                    <div id="urlList" class="mt-4 max-h-48 overflow-y-auto log-box space-y-1">
-                        <p class="text-gray-500 text-xs">No URLs fetched yet.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-2 space-y-6">
-
-                <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
-                    <h2 class="text-xl font-semibold mb-3 text-teal-300 flex justify-between items-center">
-                        Working MACs Found (<span id="macCount">0</span>)
-                        <button onclick="downloadResults()" class="text-sm bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded-lg transition duration-150">
-                            Save All Results (.json)
+                    <div class="flex space-x-2">
+                        <button id="startScanBtn" onclick="startScan()"
+                                class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md shadow-green-900/50">
+                            <span id="startScanText">Start Scan</span>
                         </button>
-                    </h2>
-                    <div id="resultsList" class="max-h-96 overflow-y-auto log-box space-y-2">
-                        <p class="text-gray-500 text-sm">No MACs found yet. Start scanning a portal.</p>
+                        <button id="stopScanBtn" onclick="stopScan()" disabled
+                                class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition duration-200 opacity-50 cursor-not-allowed shadow-md shadow-red-900/50">
+                            Stop Scan
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
-
-                    <div class="flex border-b border-gray-700 mb-4">
-                        <button id="logTabBtn" onclick="showTab('logTab')" class="py-2 px-4 text-sm font-medium text-teal-400 border-b-2 border-teal-400 focus:outline-none">Scan Activity Log</button>
-                        <button id="proxyTabBtn" onclick="showTab('proxyTab')" class="py-2 px-4 text-sm font-medium text-gray-400 hover:text-gray-200 border-b-2 border-transparent hover:border-gray-500 focus:outline-none">Proxy Information</button>
-                    </div>
-
-                    <div id="logTab" class="tab-content">
-                        <p class="text-gray-500 text-sm mb-2">Attempts: <span id="attemptCount">0</span></p>
-                        <div id="logBox" class="log-box h-48 bg-gray-900 p-3 rounded-lg overflow-y-auto text-gray-400 font-mono">
-                            <p class="log-line">--- Ready to scan. Enter a portal URL to begin. ---</p>
-                        </div>
-                    </div>
-
-                    <div id="proxyTab" class="tab-content hidden">
-                        <h3 class="text-xl font-semibold mb-3 text-teal-300">Proxy Pool Status</h3>
-                        <div class="space-y-2 text-sm text-gray-300">
-                            <p>Manager Thread: <span id="managerStatus" class="font-bold text-yellow-400">Loading...</span></p>
-                            <p>Pool Status: <span id="poolStatus" class="font-bold text-yellow-400">Loading...</span></p>
-                            <p>Available Proxies: <span id="proxyCount" class="font-bold text-teal-400">0</span></p>
-                            <p>Refresh Interval: <span id="refreshInterval">60 minutes</span></p>
-                            <p class="mt-4 text-gray-400">On-demand Validation is **ACTIVE** during scanning (dead proxies are deleted immediately).</p>
-                        </div>
-                        <hr class="my-4 border-gray-700">
-                        <h3 class="text-xl font-semibold mb-3 text-teal-300">Active Stream Proxy</h3>
-                        <p id="proxyStatus" class="text-sm text-yellow-400 mb-2">Proxy is inactive.</p>
-                        <div id="proxyDetails" class="space-y-2 text-sm text-gray-300 hidden">
-                            <p>MAC: <code id="proxyMac" class="font-mono text-teal-400"></code></p>
-                            <p>Portal: <code id="proxyPortal" class="font-mono text-teal-400"></code></p>
-                            <p>Channels: <span id="proxyChannelCount">0</span></p>
-                            <a id="playlistLink" href="#" target="_blank" class="text-blue-400 hover:text-blue-300 underline block mt-2">Download M3U Playlist</a>
-                        </div>
-                    </div>
-
+            <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-semibold mb-3 text-teal-300">URL Hunter (via urlscan.io)</h2>
+                <p class="text-gray-400 text-sm mb-4">Finds potential working portals for scanning.</p>
+                <button id="fetchUrlsBtn" onclick="fetchUrls()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-200 shadow-md shadow-blue-900/50">
+                    Fetch & Verify Portals
+                </button>
+                <div id="urlList" class="mt-4 max-h-48 overflow-y-auto log-box space-y-1">
+                    <p class="text-gray-500 text-xs">No URLs fetched yet.</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="messageModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4 z-50">
-        <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-teal-500">
-            <h3 id="modalTitle" class="text-xl font-bold mb-3 text-teal-400">Alert</h3>
-            <p id="modalMessage" class="text-gray-300 mb-6"></p>
-            <button onclick="closeModal()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition duration-200">
-                OK
-            </button>
+        <div class="lg:col-span-2 space-y-6">
+
+            <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-semibold mb-3 text-teal-300 flex justify-between items-center">
+                    Working MACs Found (<span id="macCount">0</span>)
+                    <button onclick="downloadResults()" class="text-sm bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded-lg transition duration-150">
+                        Save All Results (.json)
+                    </button>
+                </h2>
+                <div id="resultsList" class="max-h-96 overflow-y-auto log-box space-y-2">
+                    <p class="text-gray-500 text-sm">No MACs found yet. Start scanning a portal.</p>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-5 rounded-xl shadow-lg border border-gray-700">
+
+                <div class="flex border-b border-gray-700 mb-4">
+                    <button id="logTabBtn" onclick="showTab('logTab')" class="py-2 px-4 text-sm font-medium text-teal-400 border-b-2 border-teal-400 focus:outline-none">Scan Activity Log</button>
+                    <button id="proxyTabBtn" onclick="showTab('proxyTab')" class="py-2 px-4 text-sm font-medium text-gray-400 hover:text-gray-200 border-b-2 border-transparent hover:border-gray-500 focus:outline-none">Proxy Information</button>
+                </div>
+
+                <div id="logTab" class="tab-content">
+                    <p class="text-gray-500 text-sm mb-2">Attempts: <span id="attemptCount">0</span></p>
+                    <div id="logBox" class="log-box h-48 bg-gray-900 p-3 rounded-lg overflow-y-auto text-gray-400 font-mono">
+                        <p class="log-line">--- Ready to scan. Enter a portal URL to begin. ---</p>
+                    </div>
+                </div>
+
+                <div id="proxyTab" class="tab-content hidden">
+                    <h3 class="text-xl font-semibold mb-3 text-teal-300">Proxy Pool Status</h3>
+                    <div class="space-y-2 text-sm text-gray-300">
+                        <p>Manager Thread: <span id="managerStatus" class="font-bold text-yellow-400">Loading...</span></p>
+                        <p>Pool Status: <span id="poolStatus" class="font-bold text-yellow-400">Loading...</span></p>
+                        <p>Available Proxies: <span id="proxyCount" class="font-bold text-teal-400">0</span></p>
+                        <p>Refresh Interval: <span id="refreshInterval">60 minutes</span></p>
+                        <p class="mt-4 text-gray-400">
+                            Proxies are collected and validated by the server (prox.py) and refreshed automatically.
+                        </p>
+                    </div>
+                    <hr class="my-4 border-gray-700">
+                    <h3 class="text-xl font-semibold mb-3 text-teal-300">Active Stream Proxy</h3>
+                    <p id="proxyStatus" class="text-sm text-yellow-400 mb-2">Proxy is inactive.</p>
+                    <div id="proxyDetails" class="space-y-2 text-sm text-gray-300 hidden">
+                        <p>MAC: <code id="proxyMac" class="font-mono text-teal-400"></code></p>
+                        <p>Portal: <code id="proxyPortal" class="font-mono text-teal-400"></code></p>
+                        <p>Channels: <span id="proxyChannelCount">0</span></p>
+                        <a id="playlistLink" href="#" target="_blank" class="text-blue-400 hover:text-blue-300 underline block mt-2">
+                            Download M3U Playlist
+                        </a>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const PORTAL_URL_INPUT = document.getElementById('portalUrl');
-        const START_SCAN_BTN = document.getElementById('startScanBtn');
-        const STOP_SCAN_BTN = document.getElementById('stopScanBtn');
-        const START_SCAN_TEXT = document.getElementById('startScanText');
-        const LOG_BOX = document.getElementById('logBox');
-        const RESULTS_LIST = document.getElementById('resultsList');
-        const MAC_COUNT = document.getElementById('macCount');
-        const ATTEMPT_COUNT = document.getElementById('attemptCount');
-        const URL_LIST = document.getElementById('urlList');
+<div id="messageModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden items-center justify-center p-4 z-50">
+    <div class="bg-gray-800 p-6 rounded-xl shadow-2xl max-w-sm w-full border border-teal-500">
+        <h3 id="modalTitle" class="text-xl font-bold mb-3 text-teal-400">Alert</h3>
+        <p id="modalMessage" class="text-gray-300 mb-6"></p>
+        <button onclick="closeModal()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition duration-200">
+            OK
+        </button>
+    </div>
+</div>
 
-        // Proxy Info Tab elements
-        const MANAGER_STATUS = document.getElementById('managerStatus');
-        const POOL_STATUS = document.getElementById('poolStatus');
-        const PROXY_COUNT = document.getElementById('proxyCount');
-        const REFRESH_INTERVAL = document.getElementById('refreshInterval');
-        const PROXY_STATUS = document.getElementById('proxyStatus');
-        const PROXY_DETAILS = document.getElementById('proxyDetails');
-        const PROXY_MAC = document.getElementById('proxyMac');
-        const PROXY_PORTAL = document.getElementById('proxyPortal');
-        const PROXY_CHANNEL_COUNT = document.getElementById('proxyChannelCount');
-        const PLAYLIST_LINK = document.getElementById('playlistLink');
+<script>
+    const PORTAL_URL_INPUT = document.getElementById('portalUrl');
+    const START_SCAN_BTN = document.getElementById('startScanBtn');
+    const STOP_SCAN_BTN = document.getElementById('stopScanBtn');
+    const START_SCAN_TEXT = document.getElementById('startScanText');
+    const LOG_BOX = document.getElementById('logBox');
+    const RESULTS_LIST = document.getElementById('resultsList');
+    const MAC_COUNT = document.getElementById('macCount');
+    const ATTEMPT_COUNT = document.getElementById('attemptCount');
+    const URL_LIST = document.getElementById('urlList');
 
-        let scanInterval = null;
-        let fullMacCache = {};
+    const MANAGER_STATUS = document.getElementById('managerStatus');
+    const POOL_STATUS = document.getElementById('poolStatus');
+    const PROXY_COUNT = document.getElementById('proxyCount');
+    const REFRESH_INTERVAL = document.getElementById('refreshInterval');
+    const PROXY_STATUS = document.getElementById('proxyStatus');
+    const PROXY_DETAILS = document.getElementById('proxyDetails');
+    const PROXY_MAC = document.getElementById('proxyMac');
+    const PROXY_PORTAL = document.getElementById('proxyPortal');
+    const PROXY_CHANNEL_COUNT = document.getElementById('proxyChannelCount');
+    const PLAYLIST_LINK = document.getElementById('playlistLink');
 
-        // --- Utility Functions ---
+    let scanInterval = null;
+    let proxyInterval = null;
+    let fullMacCache = {};
 
-        function showMessage(title, message) {
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalMessage').textContent = message;
-            document.getElementById('messageModal').classList.remove('hidden');
-            document.getElementById('messageModal').classList.add('flex');
+    function showMessage(title, message) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalMessage').textContent = message;
+        const modal = document.getElementById('messageModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('messageModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    function log(message, type = 'default') {
+        const line = document.createElement('p');
+        line.className = 'log-line';
+        if (type === 'success') {
+            line.classList.add('text-green-400', 'font-bold');
+        } else if (type === 'fail' || type === 'error') {
+            line.classList.add('text-red-400');
+        } else if (type === 'info') {
+            line.classList.add('text-blue-400');
+        } else {
+            line.classList.add('text-gray-400');
+        }
+        line.textContent = message;
+
+        if (LOG_BOX.firstChild) {
+            LOG_BOX.insertBefore(line, LOG_BOX.firstChild);
+        } else {
+            LOG_BOX.appendChild(line);
         }
 
-        function closeModal() {
-            document.getElementById('messageModal').classList.add('hidden');
-            document.getElementById('messageModal').classList.remove('flex');
+        while (LOG_BOX.childElementCount > 200) {
+            LOG_BOX.removeChild(LOG_BOX.lastChild);
+        }
+    }
+
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+        document.querySelectorAll('#logTabBtn, #proxyTabBtn').forEach(btn => {
+            btn.classList.remove('text-teal-400', 'border-teal-400');
+            btn.classList.add('text-gray-400', 'border-transparent', 'hover:border-gray-500');
+        });
+
+        document.getElementById(tabId).classList.remove('hidden');
+
+        const activeBtn = document.getElementById(tabId === 'logTab' ? 'logTabBtn' : 'proxyTabBtn');
+        activeBtn.classList.add('text-teal-400', 'border-teal-400');
+        activeBtn.classList.remove('text-gray-400', 'border-transparent', 'hover:border-gray-500');
+    }
+
+    async function updateProxyPoolStatus() {
+        try {
+            const response = await fetch('/api/proxy_status');
+            const data = await response.json();
+
+            PROXY_COUNT.textContent = data.available_proxies.toLocaleString();
+            MANAGER_STATUS.textContent = data.manager_status;
+            POOL_STATUS.textContent = data.proxy_pool_status;
+            REFRESH_INTERVAL.textContent = data.refresh_interval;
+
+            MANAGER_STATUS.className = `font-bold ${data.manager_status === 'Active' ? 'text-green-400' : 'text-red-400'}`;
+            POOL_STATUS.className = `font-bold ${data.proxy_pool_status.startsWith('OK') ? 'text-green-400' : 'text-yellow-400'}`;
+        } catch (error) {
+            MANAGER_STATUS.textContent = 'Disconnected';
+            MANAGER_STATUS.classList.remove('text-green-400', 'text-yellow-400');
+            MANAGER_STATUS.classList.add('text-red-400');
+        }
+    }
+    async function startScan() {
+        const portalUrl = PORTAL_URL_INPUT.value.trim();
+        if (!portalUrl) {
+            showMessage("Error", "Please enter a portal URL to begin scanning.");
+            return;
         }
 
-        function log(message, type = 'default') {
-            const line = document.createElement('p');
-            line.className = 'log-line';
-            if (type === 'success') {
-                line.classList.add('text-green-400', 'font-bold');
-            } else if (type === 'fail' || type === 'error') {
-                line.classList.add('text-red-400');
-            } else if (type === 'info') {
-                line.classList.add('text-blue-400');
-            } else {
-                line.classList.add('text-gray-400');
-            }
-            line.textContent = message;
-
-            if (LOG_BOX.firstChild) {
-                LOG_BOX.insertBefore(line, LOG_BOX.firstChild);
-            } else {
-                LOG_BOX.appendChild(line);
-            }
-
-            while (LOG_BOX.childElementCount > 200) {
-                LOG_BOX.removeChild(LOG_BOX.lastChild);
-            }
-        }
-
-        // --- NEW TAB MANAGEMENT ---
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('#logTabBtn, #proxyTabBtn').forEach(btn => {
-                btn.classList.remove('text-teal-400', 'border-teal-400');
-                btn.classList.add('text-gray-400', 'border-transparent', 'hover:border-gray-500');
+        try {
+            const response = await fetch('/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `portal_url=${encodeURIComponent(portalUrl)}`
             });
 
-            document.getElementById(tabId).classList.remove('hidden');
+            const result = await response.json();
 
-            const activeBtn = document.getElementById(tabId === 'logTab' ? 'logTabBtn' : 'proxyTabBtn');
-            activeBtn.classList.add('text-teal-400', 'border-teal-400');
-            activeBtn.classList.remove('text-gray-400', 'border-transparent', 'hover:border-gray-500');
-        }
-
-        // --- NEW PROXY STATUS POLLING ---
-        async function updateProxyPoolStatus() {
-            try {
-                const response = await fetch('/api/proxy_status');
-                const data = await response.json();
-
-                PROXY_COUNT.textContent = data.available_proxies.toLocaleString();
-                MANAGER_STATUS.textContent = data.manager_status;
-                POOL_STATUS.textContent = data.proxy_pool_status;
-                REFRESH_INTERVAL.textContent = data.refresh_interval;
-
-                MANAGER_STATUS.className = `font-bold ${data.manager_status === 'Active' ? 'text-green-400' : 'text-red-400'}`;
-                POOL_STATUS.className = `font-bold ${data.proxy_pool_status.startsWith('OK') ? 'text-green-400' : 'text-yellow-400'}`;
-
-            } catch (error) {
-                MANAGER_STATUS.textContent = 'Disconnected';
-                MANAGER_STATUS.classList.remove('text-green-400', 'text-yellow-400');
-                MANAGER_STATUS.classList.add('text-red-400');
+            if (response.ok) {
+                log(`Scan initiated on ${portalUrl}.`, 'info');
+                setScanningState(true);
+                startStatusPolling();
+            } else {
+                showMessage("Error", result.error || "Failed to start scan. Already running?");
+                log(`Failed to start scan: ${result.error}`, 'error');
             }
+        } catch (error) {
+            showMessage("Network Error", "Could not connect to the backend server.");
+            log(`Network error starting scan: ${error}`, 'error');
         }
+    }
 
+    async function stopScan() {
+        try {
+            const response = await fetch('/stop', { method: 'POST' });
+            const result = await response.json();
 
-        // --- API Functions (startScan, stopScan, getStatus, startProxy, fetchUrls) ---
-
-        async function startScan() {
-            const portalUrl = PORTAL_URL_INPUT.value.trim();
-            if (!portalUrl) {
-                showMessage("Error", "Please enter a portal URL to begin scanning.");
-                return;
+            if (response.ok) {
+                log("Scan stopped successfully.", 'info');
+                setScanningState(false);
+                stopStatusPolling();
+            } else {
+                showMessage("Error", result.status || "Failed to stop scan.");
+                log(`Failed to stop scan: ${result.status}`, 'error');
             }
+        } catch (error) {
+            showMessage("Network Error", "Could not connect to the backend server.");
+            log(`Network error stopping scan: ${error}`, 'error');
+        }
+    }
 
-            try {
-                const response = await fetch('/start', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `portal_url=${encodeURIComponent(portalUrl)}`
+    function setScanningState(isScanning) {
+        if (isScanning) {
+            START_SCAN_BTN.disabled = true;
+            START_SCAN_BTN.classList.add('opacity-50', 'cursor-not-allowed');
+            STOP_SCAN_BTN.disabled = false;
+            STOP_SCAN_BTN.classList.remove('opacity-50', 'cursor-not-allowed');
+            START_SCAN_TEXT.textContent = "Scanning...";
+        } else {
+            START_SCAN_BTN.disabled = false;
+            START_SCAN_BTN.classList.remove('opacity-50', 'cursor-not-allowed');
+            STOP_SCAN_BTN.disabled = true;
+            STOP_SCAN_BTN.classList.add('opacity-50', 'cursor-not-allowed');
+            START_SCAN_TEXT.textContent = "Start Scan";
+        }
+    }
+
+    function startStatusPolling() {
+        if (scanInterval) return;
+        scanInterval = setInterval(fetchStatus, 1000);
+    }
+
+    function stopStatusPolling() {
+        if (scanInterval) {
+            clearInterval(scanInterval);
+            scanInterval = null;
+        }
+    }
+
+    async function fetchStatus() {
+        try {
+            const response = await fetch('/status');
+            const data = await response.json();
+
+            ATTEMPT_COUNT.textContent = data.attempts.toLocaleString();
+
+            if (data.logs && data.logs.length > 0) {
+                LOG_BOX.innerHTML = '';
+                data.logs.slice().reverse().forEach(line => {
+                    log(line);
                 });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    log(`Scan initiated on ${portalUrl}.`, 'info');
-                    setScanningState(true);
-                    startStatusPolling();
-                } else {
-                    showMessage("Error", result.error || "Failed to start scan. Already running?");
-                    log(`Failed to start scan: ${result.error}`, 'error');
-                }
-            } catch (error) {
-                showMessage("Network Error", "Could not connect to the backend server.");
-                log(`Network error starting scan: ${error}`, 'error');
             }
-        }
 
-        async function stopScan() {
-            try {
-                const response = await fetch('/stop', { method: 'POST' });
-                const result = await response.json();
+            fullMacCache = data.full_cache || {};
+            renderResults(data.found || []);
 
-                if (response.ok) {
-                    log("Scan stopped successfully.", 'info');
-                    setScanningState(false);
-                    stopStatusPolling();
-                } else {
-                    showMessage("Error", result.status || "Failed to stop scan.");
-                    log(`Failed to stop scan: ${result.status}`, 'error');
-                }
-            } catch (error) {
-                showMessage("Network Error", "Could not connect to the backend server.");
-                log(`Network error stopping scan: ${error}`, 'error');
-            }
-        }
-
-        async function getStatus() {
-            try {
-                const response = await fetch('/status');
-                const data = await response.json();
-
-                updateUI(data);
-
-                if (data.running) {
-                    setScanningState(true);
-                } else {
-                    setScanningState(false);
-                }
-
-                if (!scanInterval && data.running) {
-                    startStatusPolling();
-                }
-
-            } catch (error) {
-                log("Lost connection to the backend server. Stopping polling.", 'error');
+            if (!data.running) {
                 setScanningState(false);
                 stopStatusPolling();
             }
-        }
 
-        async function startProxy(mac) {
-            try {
-                const response = await fetch(`/proxy/start/${mac}`);
-                const result = await response.json();
-
-                if (response.ok) {
-                    log(`Proxy activated for MAC: ${mac}`, 'success');
-                    updateProxyUI(result.mac, result.portal, result.playlist_url, result.channels_count || fullMacCache[mac].channels.length);
-                    getStatus();
-                } else {
-                    showMessage("Proxy Error", result.error || "Failed to start proxy.");
-                    log(`Failed to start proxy: ${result.error}`, 'error');
-                }
-            } catch (error) {
-                showMessage("Network Error", "Could not communicate with proxy server.");
-                log(`Network error starting proxy: ${error}`, 'error');
-            }
-        }
-        window.startProxy = startProxy;
-
-        async function fetchUrls() {
-            URL_LIST.innerHTML = '<p class="text-yellow-500 text-xs">Searching for portals... (This may take up to 20 seconds)</p>';
-            document.getElementById('fetchUrlsBtn').disabled = true;
-            document.getElementById('fetchUrlsBtn').textContent = 'Searching...';
-
-            try {
-                const response = await fetch('/fetch-urls');
-                const urls = await response.json();
-
-                document.getElementById('fetchUrlsBtn').disabled = false;
-                document.getElementById('fetchUrlsBtn').textContent = 'Fetch & Verify Portals';
-
-                if (urls.length === 0) {
-                    URL_LIST.innerHTML = '<p class="text-red-400 text-sm">No live portals found matching the signature.</p>';
-                    return;
-                }
-
-                URL_LIST.innerHTML = '';
-                urls.forEach(url => {
-                    const urlItem = document.createElement('div');
-                    urlItem.className = 'flex justify-between items-center bg-gray-700/50 p-2 rounded-lg';
-                    urlItem.innerHTML = `
-                        <span class="text-xs truncate text-gray-300">${url}</span>
-                        <button onclick="document.getElementById('portalUrl').value='${url}'; log('Portal URL set to ${url}', 'info');"
-                                class="text-xs bg-teal-600 hover:bg-teal-500 px-2 py-1 rounded-md transition duration-150 ml-2">
-                            Use
-                        </button>
-                    `;
-                    URL_LIST.appendChild(urlItem);
-                });
-                log(`Found ${urls.length} live portal candidates.`, 'info');
-
-            } catch (error) {
-                document.getElementById('fetchUrlsBtn').disabled = false;
-                document.getElementById('fetchUrlsBtn').textContent = 'Fetch & Verify Portals';
-                URL_LIST.innerHTML = '<p class="text-red-400 text-sm">Failed to fetch URLs. Check console for details.</p>';
-                log(`Error fetching URLs: ${error}`, 'error');
-            }
-        }
-
-
-        // --- UI Update & State Management ---
-
-        function setScanningState(running) {
-            PORTAL_URL_INPUT.disabled = running;
-            START_SCAN_BTN.disabled = running;
-            STOP_SCAN_BTN.disabled = !running;
-
-            if (running) {
-                START_SCAN_TEXT.textContent = 'Scanning...';
-                START_SCAN_BTN.classList.remove('bg-green-600', 'hover:bg-green-700');
-                START_SCAN_BTN.classList.add('bg-green-800', 'opacity-70', 'cursor-not-allowed');
-                STOP_SCAN_BTN.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                START_SCAN_TEXT.textContent = 'Start Scan';
-                START_SCAN_BTN.classList.remove('bg-green-800', 'opacity-70', 'cursor-not-allowed');
-                START_SCAN_BTN.classList.add('bg-green-600', 'hover:bg-green-700');
-                STOP_SCAN_BTN.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-        }
-
-        function startStatusPolling() {
-            if (!scanInterval) {
-                scanInterval = setInterval(getStatus, 1500);
-            }
-        }
-
-        function stopStatusPolling() {
-            if (scanInterval) {
-                clearInterval(scanInterval);
-                scanInterval = null;
-            }
-        }
-
-        function updateUI(data) {
-            ATTEMPT_COUNT.textContent = data.attempts.toLocaleString();
-
-            const currentLogs = Array.from(LOG_BOX.children).map(p => p.textContent.trim());
-            data.logs.slice().reverse().forEach(logMessage => {
-                if (!currentLogs.includes(logMessage)) {
-                    const type = logMessage.includes('SUCCESS!') ? 'success' : 'default';
-                    log(logMessage, type);
-                }
-            });
-
-            fullMacCache = data.full_cache;
-
-            const existingMacs = new Set(Array.from(RESULTS_LIST.children).map(div => div.dataset.mac));
-
-            data.found.forEach(item => {
-                if (!existingMacs.has(item.mac)) {
-                    const resultItem = document.createElement('div');
-                    resultItem.dataset.mac = item.mac;
-                    resultItem.className = 'success-mac bg-gray-700 p-3 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center transition duration-300';
-                    resultItem.innerHTML = `
-                        <div class="truncate mr-4 flex-1">
-                            <code class="font-mono text-lg text-green-400 block sm:inline">${item.mac}</code>
-                            <p class="text-sm text-gray-400 truncate">
-                                ${item.portal} | ${item.working_channels_count} Ch | Expires: ${item.expires}
-                                <span class="text-teal-300"> (Proxy: ${item.proxy_used}) </span> </p>
-                        </div>
-                        <button onclick="startProxy('${item.mac}')"
-                                class="mt-2 sm:mt-0 bg-yellow-600 hover:bg-yellow-700 text-white text-sm font-semibold py-1 px-3 rounded-md transition duration-150 shadow-md">
-                            Activate Proxy
-                        </button>
-                    `;
-                    RESULTS_LIST.prepend(resultItem);
-                }
-            });
-
-            if (data.found.length > 0) {
-                const placeholder = RESULTS_LIST.querySelector('p.text-gray-500');
-                if (placeholder) placeholder.remove();
-            }
-
-            MAC_COUNT.textContent = data.found.length.toLocaleString();
-
-            // Active Proxy UI update
             if (data.proxy_mac) {
-                updateProxyUI(data.proxy_mac, data.proxy_portal, `/proxy/playlist.m3u`, data.proxy_channels);
+                PROXY_STATUS.textContent = "Proxy is active.";
+                PROXY_STATUS.classList.remove('text-yellow-400');
+                PROXY_STATUS.classList.add('text-green-400');
+                PROXY_DETAILS.classList.remove('hidden');
+                PROXY_MAC.textContent = data.proxy_mac;
+                PROXY_PORTAL.textContent = data.proxy_portal || '';
+                PROXY_CHANNEL_COUNT.textContent = data.proxy_channels || 0;
+                PLAYLIST_LINK.href = "/proxy/playlist.m3u";
             } else {
                 PROXY_STATUS.textContent = "Proxy is inactive.";
                 PROXY_STATUS.classList.remove('text-green-400');
                 PROXY_STATUS.classList.add('text-yellow-400');
                 PROXY_DETAILS.classList.add('hidden');
             }
+
+        } catch (error) {
+            log(`Error fetching status: ${error}`, 'error');
+        }
+    }
+
+    function renderResults(foundList) {
+        MAC_COUNT.textContent = foundList.length.toString();
+        RESULTS_LIST.innerHTML = '';
+
+        if (foundList.length === 0) {
+            const p = document.createElement('p');
+            p.className = "text-gray-500 text-sm";
+            p.textContent = "No MACs found yet. Start scanning a portal.";
+            RESULTS_LIST.appendChild(p);
+            return;
         }
 
-        function updateProxyUI(mac, portal, playlistUrl, channelCount) {
-            PROXY_STATUS.textContent = "Proxy Active";
-            PROXY_STATUS.classList.remove('text-yellow-400');
-            PROXY_STATUS.classList.add('text-green-400');
-            PROXY_DETAILS.classList.remove('hidden');
+        foundList.forEach(item => {
+            const row = document.createElement('div');
+            row.className = "flex items-center justify-between bg-gray-900 p-3 rounded-lg border border-gray-700 success-mac";
 
-            PROXY_MAC.textContent = mac;
-            PROXY_PORTAL.textContent = portal;
-            PROXY_CHANNEL_COUNT.textContent = channelCount;
-            PLAYLIST_LINK.href = playlistUrl;
+            const span = document.createElement('span');
+            span.className = "text-sm text-gray-100";
+            span.textContent = item;
+
+            const macMatch = item.match(/([0-9A-Fa-f]{2}[:\-]){5}[0-9A-Fa-f]{2}/);
+            const mac = macMatch ? macMatch[0] : null;
+
+            const actions = document.createElement('div');
+            actions.className = "flex space-x-2";
+
+            if (mac) {
+                const proxyBtn = document.createElement('button');
+                proxyBtn.textContent = "Use as Proxy";
+                proxyBtn.className = "text-xs bg-teal-600 hover:bg-teal-700 text-white px-3 py-1 rounded";
+                proxyBtn.onclick = () => startProxy(mac);
+                actions.appendChild(proxyBtn);
+            }
+
+            row.appendChild(span);
+            row.appendChild(actions);
+            RESULTS_LIST.appendChild(row);
+        });
+    }
+
+    async function startProxy(mac) {
+        try {
+            const response = await fetch(`/proxy/start/${encodeURIComponent(mac)}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage("Proxy Started", `Proxy mode activated for MAC ${mac}.`);
+                PROXY_STATUS.textContent = "Proxy is active.";
+                PROXY_STATUS.classList.remove('text-yellow-400');
+                PROXY_STATUS.classList.add('text-green-400');
+                PROXY_DETAILS.classList.remove('hidden');
+                PROXY_MAC.textContent = data.mac;
+                PROXY_PORTAL.textContent = data.portal;
+                PROXY_CHANNEL_COUNT.textContent = data.channels_count;
+                PLAYLIST_LINK.href = data.playlist_url;
+            } else {
+                showMessage("Error", data.error || "Failed to start proxy mode.");
+            }
+        } catch (error) {
+            showMessage("Network Error", "Could not connect to the backend server.");
         }
+    }
 
+    async function fetchUrls() {
+        URL_LIST.innerHTML = '';
+        const loading = document.createElement('p');
+        loading.className = "text-gray-400 text-xs";
+        loading.textContent = "Fetching and verifying portals via urlscan.io...";
+        URL_LIST.appendChild(loading);
 
-        function downloadResults() {
-            if (Object.keys(fullMacCache).length === 0) {
-                showMessage("Download Failed", "No working MACs found in the cache to download.");
+        try {
+            const response = await fetch('/fetch-urls');
+            const urls = await response.json();
+
+            URL_LIST.innerHTML = '';
+
+            if (!urls || urls.length === 0) {
+                const p = document.createElement('p');
+                p.className = "text-gray-500 text-xs";
+                p.textContent = "No candidate portals found at this time.";
+                URL_LIST.appendChild(p);
                 return;
             }
 
-            const downloadData = Object.values(fullMacCache).map(details => ({
-                portal: details.portal,
-                mac: details.mac,
-                user_agent: details.user_agent,
-                expires: details.expires,
-                proxy_used: details.proxy,
-                working_channels: details.channels.length,
-                channels: details.channels.map(ch => ({ id: ch.id, name: ch.name, url: ch.url }))
-            }));
+            urls.forEach(url => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between bg-gray-900 p-2 rounded-lg border border-gray-700";
 
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(downloadData, null, 4));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `mag-mac-results-${new Date().toISOString().substring(0, 10)}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+                const span = document.createElement('span');
+                span.className = "text-xs text-gray-100 truncate mr-2";
+                span.textContent = url;
 
-            log(`Successfully downloaded ${downloadData.length} results.`, 'info');
+                const btn = document.createElement('button');
+                btn.textContent = "Use";
+                btn.className = "text-xs bg-teal-600 hover:bg-teal-700 text-white px-2 py-1 rounded";
+                btn.onclick = () => {
+                    PORTAL_URL_INPUT.value = url;
+                    showTab('logTab');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+
+                row.appendChild(span);
+                row.appendChild(btn);
+                URL_LIST.appendChild(row);
+            });
+
+        } catch (error) {
+            URL_LIST.innerHTML = '';
+            const p = document.createElement('p');
+            p.className = "text-red-400 text-xs";
+            p.textContent = "Failed to fetch URLs from backend.";
+            URL_LIST.appendChild(p);
         }
-        window.downloadResults = downloadResults;
+    }
 
-        // --- Initialization ---
-        window.onload = () => {
-            getStatus();
+    function downloadResults() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullMacCache, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "mac_scan_results.json");
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+    }
 
-            // Start polling the new proxy status API
-            updateProxyPoolStatus();
-            setInterval(updateProxyPoolStatus, 3000); // Poll every 3 seconds
+    document.addEventListener('DOMContentLoaded', () => {
+        showTab('logTab');
+        fetchStatus();
+        updateProxyPoolStatus();
 
-            // Set default tab
-            showTab('logTab');
-        };
+        if (!proxyInterval) {
+            proxyInterval = setInterval(updateProxyPoolStatus, 5000);
+        }
+    });
+</script>
 
-    </script>
 </body>
 </html>
